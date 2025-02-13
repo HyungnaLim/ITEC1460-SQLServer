@@ -20,3 +20,28 @@ sqlq "SELECT OrderID, CustomerID FROM Orders WHERE CustomerID = 'STUDE';"
 
 sqlq "DELETE FROM Customers WHERE CustomerID = 'STUDE';"
 sqlq "SELECT CustomerID, CompanyName FROM Customers WHERE CustomerID = 'STUDE';"
+
+-- Part2 Exercises
+sqlq "INSERT INTO Suppliers (CompanyName, ContactName, ContactTitle, Country)
+VALUES ('Pop-up Foods', 'Hyungna Lim', 'Owner', 'USA');"
+sqlq "SELECT * FROM Suppliers WHERE CompanyName = 'Pop-up Foods';"
+
+sqlq "INSERT INTO Products (ProductName, SupplierID, CategoryID, UnitPrice, UnitsInStock)
+VALUES ('House Special Pizza', 30, 2, 15.99, 50);"
+sqlq "SELECT * FROM Products WHERE SupplierID = 30;"
+
+sqlq "UPDATE Products SET UnitsInStock = 25, UnitPrice = 17.99 WHERE ProductID = 78;"
+sqlq "SELECT * FROM Products WHERE ProductID = 78;"
+
+sqlq "DELETE FROM Products WHERE ProductID = 78;"
+sqlq "SELECT * FROM Products WHERE ProductID = 78;"
+
+sqlq "INSERT INTO Products (ProductName, SupplierID, CategoryID, UnitPrice, UnitsInStock)
+VALUES ('Acai Bowl', 30, 3, 10.95, 10)"
+sqlq "SELECT * FROM Products WHERE ProductName = 'Acai Bowl';"
+
+sqlq "UPDATE Products SET UnitPrice = 11.25 WHERE ProductID = 79;"
+sqlq "SELECT * FROM Products WHERE ProductID = 79;"
+
+sqlq "DELETE FROM Products WHERE ProductID = 79;"
+sqlq "SELECT * FROM Products WHERE ProductID = 79;"
