@@ -1,3 +1,4 @@
+-- Part 1
 -- Create the Authors Table
 CREATE TABLE Authors (
     AuthorID INT PRIMARY KEY,
@@ -113,3 +114,33 @@ SELECT * FROM BookPriceAudit;
 
 
 
+-- Part 2
+-- Create BookReviews Table
+CREATE TABLE BookReviews(
+    ReviewID INT PRIMARY KEY,
+    BookID INT,
+    CustomerID NCHAR(5),
+    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    ReviewText NVARCHAR(MAX),
+    ReviewDate DATE,
+    FOREIGN KEY (BookID) REFERENCES Books(BookID), 
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Create a View
+CREATE VIEW vw_BookReviewStats AS 
+SELECT * 
+FROM Books b JOIN BookReviews r ON b.BookID = r.BookID;
+
+
+-- Create Triggers
+CREATE TRIGGER tr_ValidateReviewDate
+
+CREATE TRIGGER tr_UpdateBookRating
+
+
+-- Test
+-- Insert at least 3 reviews for different books
+-- Try to insert a review with a future date (should fail)
+-- Query your view to see the statistics
+-- Update a review's rating and verify the book's average rating updates automatically
