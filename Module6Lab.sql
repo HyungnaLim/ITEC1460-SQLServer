@@ -34,6 +34,12 @@ VALUES
 (4, 'The Old Man and the Sea', 4, 1952, 11.99),
 (5, 'To the Lighthouse', 5, 1927, 13.99);
 
+
+-- Create a view named BookDetails that combines information from both tables
+CREATE VIEW BookDetails AS 
+SELECT b.BookID, b.Title, a.FirstName + ' ' + a.LastName AS AuthorName, b.PublicationYear, b.Price 
+FROM Books b JOIN Authors a ON b.AuthorID = a.AuthorID;
+
 -- Create a view that pulls data from the Authors and the Books tables
 CREATE VIEW RecentBooks AS 
 SELECT 
@@ -51,7 +57,7 @@ CREATE VIEW AuthorStats AS
 SELECT a.AuthorID, a.FirstName + ' ' + a.LastName AS AuthorName,
 COUNT(b.BookID) AS BookCount,
 AVG(b.Price) AS AverageBookPrice 
-FROM Authors a LEFT JOIN Books b ON a.AuthorID = b.AuthorID
+FROM Authors a LEFT JOIN Books b ON a.AuthorID = b.AuthorID 
 GROUP BY a.AuthorID, a.FirstName, a.LastName;
 
 -- a) Retrieve all the records from the Bookdetails view
@@ -61,18 +67,18 @@ SELECT * FROM RecentBooks;
 -- c) Show statistics for authors
 SELECT * FROM AuthorStats;
 
+
 -- Create an updateable view for author's firstname and lastname
 CREATE VIEW AuthorContactInfo AS 
 SELECT AuthorID, FirstName, LastName 
 FROM Authors;
 
 -- Try updating an author's name through this view:
-UPDATE AuthorContactInfo
+UPDATE AuthorContactInfo 
 SET FirstName = 'Joanne'
 WHERE AuthorID = 3;
 
 SELECT * FROM AuthorContactInfo;
-
 
 
 -- Create the audit table
@@ -85,21 +91,18 @@ CREATE TABLE BookPriceAudit (
 );
 
 -- Create an Audit Trigger
-CREATE TRIGGER trg_BookPriceChange
-ON Books
-AFTER UPDATE
-AS
-BEGIN
+CREATE TRIGGER trg_BookPriceChange 
+ON Books 
+AFTER UPDATE 
+AS 
+BEGIN 
     IF UPDATE(Price)
     BEGIN
         INSERT INTO BookPriceAudit (BookID, OldPrice, NewPrice)
-        SELECT 
-            i.BookID,
-            d.Price,
-            i.Price
+        SELECT i.BookID, d.Price, i.Price 
         FROM inserted i
-        JOIN deleted d ON i.BookID = d.BookID
-    END
+        JOIN deleted d ON i.BookID = d.BookID 
+    END 
 END;
 
 -- Update a book's price to test the trigger
@@ -107,3 +110,6 @@ UPDATE Books SET Price = 14.99 WHERE BookID = 1;
 
 -- Check the audit table
 SELECT * FROM BookPriceAudit;
+
+
+
