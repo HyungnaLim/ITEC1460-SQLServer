@@ -27,6 +27,7 @@ END
 GO
 
 -- Test the stored procedure with a valid order
+-- First declare variables
 DECLARE @OrderID INT = 10248;
 DECLARE @TotalAmount MONEY;
 
@@ -49,7 +50,7 @@ GO
 
 
 -- Execute the SQL file using the command line:
--- sqlcmd -S localhost -U sa -P P@ssw0rd -d Northwind -i order_total_procedure.sql -o results.txt
+-- sqlcmd -S localhost -U sa -P P@ssw0rd -d Northwind -i Module7Lab.sql -o results.txt
 
 /*
 The sqlcmd command executes the SQL file:
