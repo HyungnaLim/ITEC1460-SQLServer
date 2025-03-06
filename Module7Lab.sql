@@ -1,3 +1,4 @@
+-- Part 1
 -- Create a new stored procedure that calculates the total amount for an order
 -- Specifying a parameter as OUTPUT means the procedure can modify
 -- the parameter's value.
@@ -64,3 +65,68 @@ The sqlcmd command executes the SQL file:
 -- View the results:
 -- code results.txt
 
+
+-- =============================================
+-- Part 2: CheckProductStock Procedure
+-- =============================================
+CREATE OR ALTER PROCEDURE CheckProductStock
+    @ProductID INT,
+    @NeedsReorder BIT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @UnitsInStock INT
+    DECLARE @ReorderLevel INT
+    DECLARE @Discontinued INT
+    DECLARE @ProductName NVARCHAR(50)
+
+    SELECT @UnitsInStock = UnitsInStock, @ReorderLevel = ReorderLevel, @Discontinued = Discontinued, @ProductName = ProductName
+    FROM Products
+    WHERE ProductID = @ProductID
+
+    IF @Discontinued = 1
+    BEGIN
+    SET @NeedsReorder = 0
+    PRINT @ProductName + ' has been discontinued. Current stock: '
+    + CAST(@UnitsInStock AS NVARCHAR(5));
+    END
+
+    ELSE
+    BEGIN
+        IF @UnitsInStock - @ReorderLevel > 0
+        BEGIN
+        SET @NeedsReorder = 0
+        PRINT @ProductName + ' has not reached the reorder level yet. Current stock: '
+        + CAST(@UnitsInStock AS NVARCHAR(5))
+        + ' Reorder Level: ' + CAST(@ReorderLevel AS NVARCHAR(5));
+        END
+
+        IF @UnitsInStock - @ReorderLevel <= 0
+        BEGIN
+        SET @NeedsReorder = 1
+        PRINT @ProductName + ' needs reorder! Current stock: '
+        + CAST(@UnitsInStock AS NVARCHAR(5))
+        + ' Reorder Level: ' + CAST(@ReorderLevel AS NVARCHAR(5));
+        END
+    END    
+END
+GO
+
+-- Test the new procedure
+DECLARE @NeedsReorder BIT;
+EXEC CheckProductStock 
+    @ProductID = 11,
+    @NeedsReorder = @NeedsReorder OUTPUT;
+
+PRINT 'Needs Reorder: ' + CAST(@NeedsReorder AS VARCHAR(1));
+
+DECLARE @NeedsReorder BIT;
+EXEC CheckProductStock 
+    @ProductID = 10,
+    @NeedsReorder = @NeedsReorder OUTPUT;
+
+DECLARE @NeedsReorder BIT;
+EXEC CheckProductStock 
+    @ProductID = 5,
+    @NeedsReorder = @NeedsReorder OUTPUT;
