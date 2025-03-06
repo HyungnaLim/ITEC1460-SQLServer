@@ -121,12 +121,5 @@ EXEC CheckProductStock
 
 PRINT 'Needs Reorder: ' + CAST(@NeedsReorder AS VARCHAR(1));
 
-DECLARE @NeedsReorder BIT;
-EXEC CheckProductStock 
-    @ProductID = 10,
-    @NeedsReorder = @NeedsReorder OUTPUT;
-
-DECLARE @NeedsReorder BIT;
-EXEC CheckProductStock 
-    @ProductID = 5,
-    @NeedsReorder = @NeedsReorder OUTPUT;
+-- Execute Both Procedures
+-- sqlcmd -S localhost -U sa -P P@ssw0rd -d Northwind -i Module7Lab.sql -o results.txt
