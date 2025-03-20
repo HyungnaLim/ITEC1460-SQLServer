@@ -69,24 +69,30 @@ SELECT * FROM ProductReviews;
 -- 8. Creating Views: Create a view named "vw_ProductSales" that shows ProductName, CategoryName, and TotalSales (sum of UnitPrice * Quantity) for each product.
 CREATE VIEW vw_ProductSales 
 AS 
-SELECT p.ProductName, c.CategoryName, SUM(od.UnitPrice * od.Quantity) AS TotalSales 
+SELECT p.ProductName, c.CategoryName, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalSales 
 FROM [Order Details] od 
 JOIN Products p ON od.ProductID = p.ProductID 
 JOIN Categories c ON p.CategoryID = c.CategoryID 
 GROUP BY p.ProductName, c.CategoryName;
+GO
 
 SELECT * FROM vw_ProductSales;
 
 -- 9. Stored Procedures: Write a stored procedure named "sp_TopCustomersByCountry" that takes a country name as input and returns the top 3 customers by total order amount for that country.
 CREATE PROCEDURE sp_TopCustomersByCountry 
 @CountryInput NVARCHAR(50)
-AS 
-SELECT TOP 3 c.CustomerID, c.CompanyName, COUNT(o.OrderID) AS OrderCount 
-FROM Orders o 
-JOIN Customers c ON c.CustomerID = o.CustomerID 
-WHERE c.Country = @CountryInput 
-GROUP BY c.CustomerID, o.CustomerID, c.CompanyName 
-ORDER BY OrderCount DESC;
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT TOP 3 c.CustomerID, c.CompanyName, SUM(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS TotalOrderAmount 
+    FROM Orders o 
+    INNER JOIN Customers c ON c.CustomerID = o.CustomerID 
+    INNER JOIN [Order Details] od ON o.OrderID = od.OrderID
+    WHERE c.Country = @CountryInput 
+    GROUP BY c.CustomerID, c.CompanyName 
+    ORDER BY TotalOrderAmount DESC;
+END;
+GO
 
 EXEC sp_TopCustomersByCountry @CountryInput = 'Germany';
 
