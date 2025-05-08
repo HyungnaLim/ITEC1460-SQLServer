@@ -25,7 +25,7 @@ CREATE TABLE Product (
     Size DECIMAL(10,2),
     SizeUnit NVARCHAR(30),
     SupplierID INT
-    FOREIGN KEY (CategoryID) REFERENCES Category(CategoryID)
+    FOREIGN KEY (CategoryID) REFERENCES Category(CategoryID),
     FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
 );
 
@@ -53,8 +53,8 @@ CREATE TABLE Inventory (
     ReorderLevel INT,
     LastRestockedDate DATE,
     ExpirationDate DATE
-    FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
-    FOREIGN KEY (ProductColorID) REFERENCES ProductColor(ProductColorID)
+    FOREIGN KEY (ProductID) REFERENCES Product(ProductID),
+    FOREIGN KEY (ProductColorID) REFERENCES ProductColor(ProductColorID),
     FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
 );
 
@@ -72,7 +72,7 @@ CREATE TABLE PurchaseOrderDetail (
     ProductID INT,
     QuantityOrdered INT,
     UnitPrice Decimal(15,2)
-    FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID)
+    FOREIGN KEY (OrderID) REFERENCES PurchaseOrder(OrderID),
     FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
 );
 
@@ -106,16 +106,16 @@ VALUES ('Counter', 1, 1), ('Counter', 1, 2), ('Counter', 1, 3),
 ('Left Corner', 3, 1), ('Left Corner', 3, 2), ('Left Corner', 3, 3);
 
 INSERT INTO Inventory
-VALUES (1, NULL, 1, 12, 10, 2025-01-17, 2026-01-31),
-(2, 1, 3, 5, 5, 2025-01-13, 2027-01-31),
-(2, 2, 3, 7, 5, 2025-01-13, 2027-01-31),
-(3, 3, 2, 3, 8, 2025-02-11, 2026-10-15),
-(3, 4, 2, 10, 8, 2025-02-11, 2026-10-18);
+VALUES (1, NULL, 1, 12, 10, '2025-01-17', '2026-01-31'),
+(2, 1, 3, 5, 5, '2025-01-13', '2027-01-31'),
+(2, 2, 3, 7, 5, '2025-01-13', '2027-01-31'),
+(3, 3, 2, 3, 8, '2025-02-11', '2026-10-15'),
+(3, 4, 2, 10, 8, '2025-02-11', '2026-10-18');
 
 INSERT INTO PurchaseOrder
-VALUES (3, 2025-02-06, 2025-02-11, 'Arrived'),
-(2, 2025-02-21, NULL, 'Shipped'),
-(1, 2025-04-18, NULL, 'Order Placed');
+VALUES (3, '2025-02-06', '2025-02-11', 'Arrived'),
+(2, '2025-02-21', NULL, 'Shipped'),
+(1, '2025-04-18', NULL, 'Order Placed');
 
 INSERT INTO PurchaseOrderDetail
 VALUES (1, 3, 20, 10.00),
